@@ -1,0 +1,55 @@
+@bot.command()
+@commands.has_any_role(493982783048384512,567377820209250314,558680396896796673,762918421284782091,704292000429637712) # розрешённые роли
+async def add_reas(ctx, *, arg):
+    global block, ind1, txt, ind2, color_txt, ind3
+    block = False
+    ind1 = False
+    title_txt = ""
+    txt = ""
+    txt2 = ""
+    block2 = False
+    ind2 = 0
+    color_txt = None
+    ind3 = False
+    try: # цикл отброса переменных по ^^ и ::
+        for i in arg:
+            if ind1 == True:
+                if i == ":":
+                    ind1 = False
+                    block = True
+                else:
+                    title_txt += i
+            if ind3 == True:
+                if i == "^":
+                    ind3 = False
+                    block2 = True
+                else:
+                    txt += i
+            if i == ":" and block == False:
+                ind1 = True
+            if i == "^" and block == True and block2 == False:
+                ind3 = True
+            if block == True and block2 == True:
+                if ind2 <= 1:
+                    ind2 += 1
+                else:
+                    txt2 += i
+        ind2 = 0
+        block = False
+        channel = bot.get_channel(764860136778629170) # канал отправки лога
+        color_txt = discord.Color.red() # стандартный цвет
+        if txt == "бан" or txt == "Бан": выбор цвета 
+            color_txt = discord.Color.red()
+        elif txt == "Кик" or txt == "кик" or txt == "кикнут" or txt == "Кикнут":
+            color_txt = discord.Color.orange()
+        elif txt == "мут" or txt == "Мут" or txt == "замучен" or txt == "Замучен":
+            color_txt = discord.Color.from_rgb(252, 215, 3)
+        elif txt == "размут" or txt == "Размут" or txt == "Размучен" or txt == "размучен":
+            color_txt = discord.Color.green()
+        emb = discord.Embed(title=title_txt, colour=color_txt) # создание сообщения
+        emb.set_footer(text=ctx.author.name, icon_url=ctx.author.avatar_url)# создание сообщения
+        emb.add_field(name=txt, value=txt2)# создание сообщения
+        await channel.send(embed=emb) # отправка сообщенич
+    except:
+        author = ctx.message.author # елси неправильно ввели
+        await ctx.send(embed = discord.Embed(description = f'{author.mention},  Вы некоректно ввели переменные!(add_reas :@человек: ^бан/кик/мут и тд^ причина)', color=discord.Color.orange()))
